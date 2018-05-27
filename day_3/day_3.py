@@ -30,19 +30,16 @@
 #     count = count + 1
 #     time.sleep(0.5)
 #     count = count + 1
-#
 # threads = []
 # for i in range(10):
 #     thread = threading.Thread(target=adder)
 #     thread.start()
 #     threads.append(thread)
-#
 # #等待线程退出后主线程再退出
 # for thread in threads:
 #     thread.join()
-#
 # print(count)
-# print(threads)
+
 
 
 
@@ -302,7 +299,7 @@
 # print("time %d"% t)
 # for item in result:
 #     print("status_code[%s]:%d"%(item,result.get(item)))
-
+#
 
 
 

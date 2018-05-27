@@ -370,7 +370,7 @@ from multiprocessing import Process, Queue, Lock
 # next(g3)
 # for i in range(5):
 #     g1.send(i)
-#     g2.send(i)
+#     g2.send(i)\
 #     g3.send(i)
 
 

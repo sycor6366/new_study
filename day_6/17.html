@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="http://httpbin.org/post" method="post">
+    First name:<br>
+   <input type="text" name="firstname" value="Mickey">
+    <br>
+    Last name:<br>
+    <input type="text" name="lastname" value="Mouse" readonly size="40">
+    <br>
+    <select name="cats">
+    <option value="volvo">Volvo</option>
+    <option value="saab">Saab</option>
+    <option value="fiat" selected>Fiat</option>
+    <option value="audi">Audi</option>
+</select>
+    <br>
+    <textarea name="message" rows="5" cols="30" >请输入有效内容</textarea>
+    <br>
+    <input type="submit" value="submit">
+    <br>
+    <button type="button" onclick="alert('hello world')">Click ME!</button>
+</form>
+</form>
+</body>
+</html>

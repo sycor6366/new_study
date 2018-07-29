@@ -1,0 +1,21 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>姓名: {{ author }}</h1>
+  <p><strong>名:</strong> {{ author.first_name }}</p>
+  <p><strong>姓:</strong> {{ author.last_name }}</p> 
+  <p><strong>出生日期:</strong> {{ author.date_of_birth }}</p>
+  <p><strong>死亡日期:</strong> {{ author.date_of_death }}</p> 
+ 
+
+  <div style="margin-left:20px;margin-top:20px">
+    <h4>出版过的书</h4>
+
+    {% for book in author.book_set.all %}
+    <hr>
+   
+    <p><strong>书名:</strong><a href="{{ book.get_absolute_url }}">{{book.title}}</a></p>
+    
+    {% endfor %}
+  </div>
+{% endblock %}

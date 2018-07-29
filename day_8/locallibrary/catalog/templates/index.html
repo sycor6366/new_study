@@ -1,0 +1,19 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h1>首页</h1>
+
+  <p>欢迎使用 <em>图书管理系统</em>.</p>
+
+<h2>动态内容</h2>
+
+  <p>概览:</p>
+  <ul>
+    <li><strong>图书:</strong> {{ num_books }}</li>
+    <li><strong>副本:</strong> {{ num_instances }}</li>
+    <li><strong>可以图书:</strong> {{ num_instances_available }}</li>
+    <li><strong>作者:</strong> {{ num_authors }}</li>
+  </ul>
+<p>You have visited this page {{ num_visits }}{% if num_visits == 1 %} time{% else %} times{% endif %}.</p>
+
+{% endblock %}

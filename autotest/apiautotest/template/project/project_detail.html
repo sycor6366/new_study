@@ -1,0 +1,53 @@
+{% extends 'base.html' %} {% block content %}
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <h3 class="page-header">项目详情</h3>
+    <div class="row">
+        <div class="col-lg-3">
+            <label>项目:</label>
+        </div>
+        <div class="col-lg-3">
+            {{ object.name }}
+        </div>
+    </div>
+    <div class='row'>
+        <div class="col-lg-3">
+            <label> 项目描述:</label>
+        </div>
+        <div class="col-lg-3">
+            {{ object.description }}
+        </div>
+    </div>
+    <div class='row'>
+        <div class="col-lg-3">
+            <label>创建时间:</label>
+        </div>
+        <div class="col-lg-6">
+            {{ object.createTime }}
+        </div>
+    </div>
+    <div class='row'>
+        <div class="col-lg-3">
+            <label>最近修改时间:</label>
+        </div>
+        <div class="col-lg-6">
+            {{ object.LastUpdateTime }}
+        </div>
+    </div>
+    <div class='row'>
+        <div class="col-lg-3">
+            <label>项目负责人:</label>
+        </div>
+        <div class="col-lg-3">
+            {{ object.owner }}
+        </div>
+    </div>
+    <div class='row'>
+        <div class="col-lg-3">
+            <label>项目成员:</label>
+        </div>
+        <div class="col-lg-3">
+            {{ object.member }}
+        </div>
+    </div>
+</div>
+{% endblock %}

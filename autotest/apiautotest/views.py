@@ -2,21 +2,22 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate,login
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login ,logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.views import generic
-
-from .models import Project
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from .models import Project ,HttpApi
 
 
 # Create your views here.
-
+@login_required
 def index(request):
-    return render(request, "index.html")
+    return render(request,"index.html")
 
-
+@login_required
 def user_login(request):
     if request.method == "GET":
         return render(request, "login.html")
@@ -48,7 +49,7 @@ class ProjectDetailView(LoginRequiredMixin, generic.DetailView):
     model = Project
     template_name = "project/project_detail.html"
 
-
+@login_required
 def project_edit(request, pk):
     if request.method == "GET":
         project = Project.objects.get(id=pk)
@@ -88,7 +89,7 @@ def project_edit(request, pk):
         project.save()
         return redirect("project_detail", project.id)
 
-
+@login_required
 def project_create(request):
     if request.method == "GET":
         return render(request, "project/project_form.html")
@@ -120,3 +121,71 @@ def project_create(request):
                           member=project_member)
         project.save()
         return redirect("project_detail", project.id)
+@login_required
+def user_logout(request):
+    logout(request)
+    return redirect('user_login')
+
+
+@login_required
+def httpapi_create(request, pk):
+    if request.method == "GET":
+        project = Project.objects.get(id=pk)
+        return render(request,"project/httpapi_form.html", {"project": project })
+    if request.method == "POST":
+        httpapi_project = Project.objects.get(id=pk)
+        httpapi_name = request.POST.get("httpapi_name")
+        httpapi_description = request.POST.get("httpapi_description")
+        httpapi_url = request.POST.get("httpapi_url")
+        httpapi_requesttype = request.POST.get("httpapi_requesttype")
+        httpapi_requestheader = request.POST.get("httpapi_requestheader")
+        httpapi_requestparametertype = request.POST.get("httpapi_requestparametertype")
+        httpapi_requestbody = request.POST.get("httpapi_requestbody")
+        userupdate= request.user
+
+        httpapi = HttpApi(project=httpapi_project,
+                          name=httpapi_name,
+                          requestType=httpapi_requesttype,
+                          apiurl=httpapi_url,
+                          requestParameterType=httpapi_requestparametertype,
+                          requestHeader=httpapi_requestheader,
+                          requestBody=httpapi_requestbody,
+                          userUpdate=userupdate,
+                          description=httpapi_description
+                          )
+        httpapi.save()
+
+        return HttpResponse("ok")
+
+
+@login_required
+def httpapi_list(request, pk):
+    project = Project.objects.get(id=pk)
+
+    rs = HttpApi.objects.filter(project=project)
+    paginator = Paginator(rs, 5)
+    page = request.GET.get('page')
+    httpapis = paginator.get_page(page)
+    return render(request, "project/httpapi_list.html", {"project": project, "objects": httpapis})
+
+
+@login_required
+def httpapi_edit(request, project_id, httpapi_id):
+    if request.method == "GET":
+        project = Project.objects.get(id=project_id)
+        httpapi = HttpApi.objects.get(project=project, id=httpapi_id)
+        return render(request,"project/httpapi_form.html", {"project": project, "object": httpapi })
+    if request.method == "POST":
+
+        project = Project.objects.get(id=project_id)
+        httpapi = HttpApi.objects.get(project=project, id=httpapi_id)
+        httpapi.name = request.POST.get("httpapi_name")
+        httpapi.description = request.POST.get("httpapi_description")
+        httpapi.apiurl = request.POST.get("httpapi_url")
+        httpapi.requestType = request.POST.get("httpapi_requesttype")
+        httpapi.requestHeader = request.POST.get("httpapi_requestheader")
+        httpapi.requestParameterType = request.POST.get("httpapi_requestparametertype")
+        httpapi.requestBody = request.POST.get("httpapi_requestbody")
+        httpapi.userUpdate= request.user
+        httpapi.save()
+        return redirect("httpapi_list",project.id)

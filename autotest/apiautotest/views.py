@@ -218,7 +218,7 @@ def httpapi_run(request, project_id, httpapi_id):
             if httpapi.assertType == "noselect":
                 assertresult = ""
             elif httpapi.assertType == "in":
-                if httpai.assertContent.strip() in r.text:
+                if httpapi.assertContent.strip() in r.text:
                     assertresult = "ok"
                 else:
                     assertresult = "failed"
@@ -244,7 +244,7 @@ def httpapi_run(request, project_id, httpapi_id):
             if httpapi.assertType == "noselect":
                 assertresult = ""
             elif httpapi.assertType == "in":
-                if httpai.assertContent.strip() in r.text:
+                if httpapi.assertContent.strip() in r.text:
                     assertresult = "ok"
                 else:
                     assertresult = "failed"

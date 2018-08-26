@@ -31,6 +31,14 @@ REQUEST_PARAMETER_TYPE_CHOICE = (
     ('raw','原数据(raw)')
 )
 
+
+ASSERT_TYPE_CHOICE = (
+    ('noselect','无'),
+    ('in', '包含'),
+    ('status_code', '状态码')
+
+)
+
 class HttpApi(models.Model):
     """
     接口信息
@@ -45,6 +53,22 @@ class HttpApi(models.Model):
     lastUpdateTime = models.DateTimeField(auto_now=True,verbose_name='最近更新')
     userUpdate = models.ForeignKey(User,on_delete=models.SET_NULL,null=True,verbose_name='更新人')
     description = models.CharField(max_length=10240,blank=True,null=True,verbose_name='描述')
+    assertType = models.CharField(max_length=20, verbose_name="断言类型", default="noselect", choices=ASSERT_TYPE_CHOICE)
+    assertContent = models.CharField(max_length=1024, verbose_name="断言内容", blank=True, null=True)
+
+
 
     def __str__(self):
         return self.name
+
+
+
+class HttpRunResult(models.Model):
+    """
+    接口测试结果
+    """
+    httpapi = models.ForeignKey(HttpApi, on_delete=models.CASCADE, verbose_name="所属接口")
+    response = models.TextField(verbose_name="响应结果")
+    header = models.TextField(verbose_name="响应header")
+    statusCode = models.IntegerField(verbose_name="状态码")
+    assertResult = models.CharField(max_length=20, null=True, verbose_name="断言结果")

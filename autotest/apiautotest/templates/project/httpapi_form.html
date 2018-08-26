@@ -89,6 +89,23 @@
                             <textarea class="form-control" name="httpapi_requestbody" id="httpapi_requestbody" rows="5"></textarea>
                             {% endif %}
                         </div>
+                        <div class="form-group">
+                            <label for="httpapi_asserttype">断言类型</label>
+
+                            <select class="form-control" name="httpapi_asserttype" id="httpapi_asserttype">
+                                <option vaule="noselect">无</option>
+                                <option value="in">包含</option>
+                                <option value="status_code">状态码</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="httpapi_assertcontent">断言内容</label>
+                            {% if object %}
+                            <textarea class="form-control" name="httpapi_assertcontent" id="httpapi_assertcontent" rows="5">{{ object.assertContent }}</textarea>
+                            {% else %}
+                            <textarea class="form-control" name="httpapi_assertcontent" id="httpapi_assertcontent" rows="5"></textarea>
+                            {% endif %}
+                        </div>
 
                         <button type="submit" class="btn btn-default">提交</button>
                     </form>
@@ -112,9 +129,19 @@
         }
     }
 
+    var e2 = document.getElementById("httpapi_asserttype")
+    var optionsValue="{{ object.assertType }}"
+    for(var i=0;i<e2.options.length;i++){
+        if(e2.options[i].value==optionsValue){
+            e2.options[i].selected=true;
+        }
+    }
+
+
     var eid = "httpapi_" + "{{ object.requestParameterType }}"
    
     var e2 = document.getElementById(eid)
+
     e2.setAttribute("checked","checked")
 
     

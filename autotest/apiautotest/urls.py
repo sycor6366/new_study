@@ -11,5 +11,7 @@ urlpatterns = [
     path('project/create', views.project_create, name='project_create'),
     path('project/<int:pk>/httpapi/create', views.httpapi_create, name='httpapi_create'),
     path('project/<int:pk>/httpapi/', views.httpapi_list, name='httpapi_list'),
-    path('project/<int:project_id>/httpapi/<int:httpapi_id>/edit', views.httpapi_edit, name='httpapi_edit')
+    path('project/<int:project_id>/httpapi/<int:httpapi_id>/edit', views.httpapi_edit, name='httpapi_edit'),
+    path('project/<int:project_id>/httpapi/<int:httpapi_id>/run', views.httpapi_run, name='httpapi_run'),
+    path('project/<int:project_id>/httpapi/<int:httpapi_id>/result', views.httpapi_result, name='httpapi_result')
 ]

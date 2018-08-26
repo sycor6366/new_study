@@ -38,6 +38,8 @@
                                 <td>{{object.lastUpdateTime }}</td>
                                 <td>
                                     <a class="playitbtn tryitbtnsyntax" href={% url "httpapi_edit" project.id object.id %}>编辑</a>
+                                    <a class="playitbtn tryitbtnsyntax" href={% url "httpapi_run" project.id object.id %}>运行</a>
+                                    <a class="playitbtn tryitbtnsyntax" href={% url "httpapi_result" project.id object.id %}>结果</a>
                                 </td>
                             </tr>
                             {% endfor %}

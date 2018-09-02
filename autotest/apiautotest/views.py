@@ -9,8 +9,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from .models import Project ,HttpApi,HttpRunResult
+from .models import Project ,HttpApi,HttpRunResult,HttpTest,HttpTestResult
 import requests
+from django.views.decorators.csrf import csrf_exempt
+from .lib import utils
+
 
 # Create your views here.
 @login_required
@@ -274,3 +277,84 @@ def httpapi_result(request, project_id, httpapi_id):
         return render(request,"project/httpapi_result.html", {"project": project})
 
     return render(request,"project/httpapi_result.html",{"project": project, "object": httpresult })
+
+
+@csrf_exempt
+@login_required
+def httpapi_delete(request, project_id, httpapi_id):
+    project = Project.objects.get(id=project_id)
+    httpapi = HttpApi.objects.get(project=project, id=httpapi_id)
+    if request.method == "GET":
+        return render(request, "project/httpapi_delete.html", {"project": project, "object": httpapi})
+
+    if request.method == "POST":
+        httpapi.delete()
+        # return HttpResponse("delete ok")
+        return redirect('httpapi_list',project.id)
+
+@login_required
+def test_create(request,project_id):
+    project = Project.objects.get(id = project_id)
+    if request.method == 'GET':
+        httpapis = project.httpapi_set.all()
+        return render(request, "project/httpapi_test_form.html", {"project": project, "objects": httpapis})
+    if request.method == 'POST':
+        httprunresults = []
+        httpapi_name = request.POST.get('httpapi_name')
+        to = request.POST.getlist('to')
+        httpapis = ','.join(to)
+        httptest = HttpTest(name=httpapi_name,httpapis=httpapis,project=project)
+        httptest.save()
+        # return HttpResponse(httpapis)
+        return redirect('test_list',project.id)
+
+@login_required
+def test_list(request,project_id):
+    project = Project.objects.get(id=project_id)
+    rs = HttpTest.objects.filter(project_id = project_id).order_by('-id')
+    paginator = Paginator(rs,5)
+    page = request.GET.get('page')
+    tests = paginator.get_page(page)
+    return render(request,'project/test_list.html',{'project':project,'objects':tests})
+
+
+@login_required
+def test_run(request, project_id, test_id):
+    project = Project.objects.get(id=project_id)
+    test = HttpTest.objects.get(id=test_id)
+    if request.method == "GET":
+        httprunresults = []
+        httprunresult_asserts = []
+        httpapis = test.httpapis.split(",")
+        for httpapi_id in httpapis:
+            httpapi = HttpApi.objects.get(id=int(httpapi_id))
+            httprunresult = utils.test_run(httpapi)
+            httprunresults.append(str(httprunresult.id))
+            httprunresult_asserts.append(httprunresult.assertResult)
+        if "failed"  in httprunresult_asserts:
+            status = "failed"
+        else:
+            status = "ok"
+        httprunresults = ','.join(httprunresults)
+        httptestresult = HttpTestResult(httptest=test, httprunresults=httprunresults,status=status)
+        httptestresult.save()
+        # return HttpResponse(httprunresults)
+        return redirect("test_result", project_id, test_id)
+
+@login_required
+def test_result(request, project_id, test_id):
+    project = Project.objects.get(id=project_id)
+    try:
+        testresult = HttpTestResult.objects.filter(httptest_id=test_id).order_by("-id")[0]
+    except:
+        return render(request,"project/test_result.html", {"project":project})
+    status = testresult.status
+    httprunresult_ids = testresult.httprunresults.split(",")
+    httprunresults = []
+    for httprunresult_id in httprunresult_ids :
+        httprunresult = HttpRunResult.objects.get(id=httprunresult_id)
+        httprunresults.append(httprunresult)
+
+    return render(request,"project/test_result.html", {"project":project, "testresult":testresult, "objects": httprunresults })
+
+

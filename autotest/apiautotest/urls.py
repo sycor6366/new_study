@@ -3,8 +3,8 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('login/',views.user_login, name='user_login'),
-    path('logout/',views.user_logout, name='user_logout'),
+    path('login/', views.user_login, name='user_login'),
+    path('logout/', views.user_logout, name='user_logout'),
     path('project/',views.ProjectListView.as_view(), name='project_list'),
     path('project/<int:pk>', views.ProjectDetailView.as_view(), name='project_detail'),
     path('project/<int:pk>/edit', views.project_edit, name='project_edit'),
@@ -18,7 +18,8 @@ urlpatterns = [
     path('project/<int:project_id>/test/create',views.test_create,name='test_create'),
     path('project/<int:project_id>/test/',views.test_list,name='test_list'),
     path('project/<int:project_id>/test/<int:test_id>/run',views.test_run,name='test_run'),
-    path('project/<int:project_id>/test/<int:test_id>/result', views.test_result, name='test_result')
+    path('project/<int:project_id>/test/<int:test_id>/result', views.test_result, name='test_result'),
+    path('project/<int:project_id>/report',views.report_list,name='report_list')
 
 
 ]

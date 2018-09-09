@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cn-ZH">
+<html lang="en">
 
 <head>
 
@@ -17,8 +17,6 @@
     <!-- Custom fonts for this template-->
     <link href="/static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 
-    <!-- Page level plugin CSS-->
-    <link href="/static/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
 
     <!-- Custom styles for this template-->
     <link href="/static/css/sb-admin.css" rel="stylesheet">
@@ -37,7 +35,7 @@
 
 
         <!-- Navbar -->
-        <ul class="navbar-nav ml-auto ml-md-6">
+        <ul class="navbar-nav  ml-auto ml-md-6">
             <li class="nav-item dropdown no-arrow">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
@@ -87,7 +85,7 @@
             <footer class="sticky-footer">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright © shiyuan.liu 2018</span>
+                        <span>Copyright © jiaminqiang 2018</span>
                     </div>
                 </div>
             </footer>
@@ -135,10 +133,71 @@
     <!-- Custom scripts for all pages-->
     <script src="/static/js/sb-admin.min.js"></script>
     <script src="/static/js/multiselect.min.js"></script>
+
+
+
 </body>
 <script>
     jQuery(document).ready(function($) {
   $('#multiselect').multiselect();
 });
+// 饼图
+var ctx = document.getElementById("myPieChart");
+if(ctx != null){
+    var myPieChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ["ok", "failed"],
+        datasets: [{
+          data: [ {{ ok }}, {{ failed }}],
+          backgroundColor: ['#007bff', '#dc3545'],
+        }],
+      },
+    });
+}
+// 柱状图
+var ctx2 = document.getElementById("myBarChart");
+if(ctx2 != null){
+var myLineChart = new Chart(ctx2, {
+  type: 'bar',
+  data: {
+    labels: ["项目数", "接口数", "测试数", "报告数"],
+    datasets: [{
+      label: "个数",
+      backgroundColor: "rgba(2,117,216,1)",
+      borderColor: "rgba(2,117,216,1)",
+      data: [{{ project }}, {{ httpapi }}, {{ httptest }}, {{ httptestresult}}],
+    }],
+  },
+  options: {
+    scales: {
+      xAxes: [{
+        time: {
+          unit: 'month'
+        },
+        gridLines: {
+          display: false
+        },
+        ticks: {
+          maxTicksLimit: 6
+        }
+      }],
+      yAxes: [{
+        ticks: {
+          min: 0,
+          max: 20,
+          maxTicksLimit: 1
+        },
+        gridLines: {
+          display: true
+        }
+      }],
+    },
+    legend: {
+      display: false
+    }
+  }
+});
+}
 </script>
 </html>
